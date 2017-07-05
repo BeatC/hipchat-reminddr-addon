@@ -24,7 +24,7 @@
         },
         "webhook": {
             "url": "{{.LocalBaseUrl}}/hook",
-            "pattern": "^/test_hook",
+            "pattern": "^/call",
             "event": "room_message",
             "name": "Golang Bot"
         }
