@@ -1,26 +1,26 @@
 package main
 
 import (
-	"path"
 	"encoding/json"
 	"html/template"
-	"github.com/tbruyelle/hipchat-go/hipchat"
-	"github.com/jasonlvhit/gocron"
-	"github.com/gorilla/mux"
-	"net/http"
 	"log"
+	"net/http"
+	"path"
 	"strconv"
+
 	"./util"
+	"github.com/gorilla/mux"
+	"github.com/tbruyelle/hipchat-go/hipchat"
 )
 
 func (c *Context) Routes() *mux.Router {
 	r := mux.NewRouter()
 
-	gocron.Every(1).Second().Do(func () {
-		log.Printf("Hello")
-	})
+	// gocron.Every(1).Second().Do(func() {
+	// 	log.Printf("Hello")
+	// })
 
-	gocron.Start()
+	// gocron.Start()
 
 	// healthcheck required by Micros
 	r.Path("/healthcheck").Methods("GET").HandlerFunc(c.healthcheck)
@@ -62,7 +62,7 @@ func (c *Context) installable(w http.ResponseWriter, r *http.Request) {
 	}
 
 	credentials := hipchat.ClientCredentials{
-		ClientID: authPayload["oauthId"].(string),
+		ClientID:     authPayload["oauthId"].(string),
 		ClientSecret: authPayload["oauthSecret"].(string),
 	}
 	roomName := strconv.Itoa(int(authPayload["roomId"].(float64)))
@@ -73,7 +73,7 @@ func (c *Context) installable(w http.ResponseWriter, r *http.Request) {
 	}
 	rc := &RoomConfig{
 		name: roomName,
-		hc: tok.CreateClient(),
+		hc:   tok.CreateClient(),
 	}
 	c.rooms[roomName] = rc
 	util.PrintDump(w, r, false)
@@ -85,7 +85,7 @@ func (c *Context) config(w http.ResponseWriter, r *http.Request) {
 	lp := path.Join("./static", "layout.hbs")
 	fp := path.Join("./static", "config.hbs")
 	vals := map[string]string{
-		"LocalBaseUrl": c.baseURL,
+		"LocalBaseUrl":  c.baseURL,
 		"SignedRequest": signedRequest,
 		"HostScriptUrl": c.baseURL,
 	}
@@ -102,16 +102,17 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Parsed auth data failed:%v\n", err)
 	}
 
-	roomIDNumber := int((payLoad["item"].(util.PayloadItem))["room"].(util.PayloadItem)["id"].(float64))
+	roomIDNumber := int((payLoad["item"].(map[string]interface{}))["room"].(map[string]interface{})["id"].(float64))
 	roomID := strconv.Itoa(roomIDNumber)
 
 	util.PrintDump(w, r, true)
 
 	log.Printf("Sending notification to %s\n", roomID)
 	notifRq := &hipchat.NotificationRequest{
-		Message: "Let's join <strong>video call</strong>: <a href=\"https://hipchat.me/testorumo\">Testorumo</a>!",
+		Message:       "Let's join <strong>video call</strong>: <a href=\"https://hipchat.me/testorumo\">Testorumo</a>!",
 		MessageFormat: "html",
-		Color: "red",
+		Color:         "green",
+		Notify:        true,
 	}
 
 	if _, ok := c.rooms[roomID]; ok {
@@ -122,4 +123,8 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Room is not registered correctly:%v\n", c.rooms)
 	}
+}
+
+func (c *Context) sidebar(w http.ResponseWriter, r *http.Request) {
+
 }

@@ -1,8 +1,8 @@
 package util
 
 import (
-	"log"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httputil"
 )

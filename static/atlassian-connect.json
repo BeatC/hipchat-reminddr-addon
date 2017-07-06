@@ -1,10 +1,10 @@
 {{define "config"}}{
-    "key": "ga-hipchat-awesomeness",
-    "name": "Golang Bot",
-    "description": "HipChat Golang Base App",
+    "key": "ga-hipchat-standuppa",
+    "name": "HipChat Standuppa",
+    "description": "HipChat Standuppa bot. Reminds y'all when to join to the standup",
     "vendor": {
-        "name": "Atlassian Labs",
-        "url": "https://www.hipchat.com"
+        "name": "TheBeatCoder",
+        "url": "http://www.thebeatcoder.com"
     },
     "links": {
         "self": "{{.LocalBaseUrl}}/atlassian-connect.json",
@@ -12,6 +12,10 @@
     },
     "capabilities": {
         "hipchatApiConsumer": {
+            "avatar": {
+                "url": "{{.LocalBaseUrl}}/img/logo.jpg",
+                "url@2x": "{{.LocalBaseUrl}}/img/logo.jpg"
+            },
             "scopes": [
                 "send_notification"
             ]
@@ -26,8 +30,30 @@
             "url": "{{.LocalBaseUrl}}/hook",
             "pattern": "^/call",
             "event": "room_message",
-            "name": "Golang Bot"
-        }
+            "name": "Standuppa"
+        },
+        "webPanel": [
+            {
+                "key": "hc-standuppa-addon",
+                "name": {
+                    "value": "Hipchat Standuppa addon sidebar"
+                },
+                "location": "hipchat.sidebar.right",
+                "url": "{{.LocalBaseUrl}}/sidebar"
+            }
+        ],
+        "glance": [
+            {
+                "name": {
+                    "value": "HipChat Standuppa"
+                },
+                "key": "hc-standuppa-addon-glance",
+                "icon": {
+                    "url": "{{.LocalBaseUrl}}/img/logo.jpg",
+                    "url@2x": "{{.LocalBaseUrl}}/img/logo.jpg"
+                }
+            }
+        ]
     }
 }
 {{end}}
