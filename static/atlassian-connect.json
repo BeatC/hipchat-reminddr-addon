@@ -1,5 +1,5 @@
 {{define "config"}}{
-    "key": "ga-hipchat-standuppa",
+    "key": "hc-standuppa-addon",
     "name": "HipChat Standuppa",
     "description": "HipChat Standuppa bot. Reminds y'all when to join to the standup",
     "vendor": {
@@ -28,13 +28,13 @@
         },
         "webhook": {
             "url": "{{.LocalBaseUrl}}/hook",
-            "pattern": "^/call",
+            "pattern": "^/standuppa",
             "event": "room_message",
             "name": "Standuppa"
         },
         "webPanel": [
             {
-                "key": "hc-standuppa-addon",
+                "key": "hc-standuppa-addon-sidebar",
                 "name": {
                     "value": "Hipchat Standuppa addon sidebar"
                 },
@@ -48,6 +48,7 @@
                     "value": "HipChat Standuppa"
                 },
                 "key": "hc-standuppa-addon-glance",
+                "target": "hc-standuppa-addon-sidebar",
                 "icon": {
                     "url": "{{.LocalBaseUrl}}/img/logo.jpg",
                     "url@2x": "{{.LocalBaseUrl}}/img/logo.jpg"

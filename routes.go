@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -33,6 +34,7 @@ func (c *Context) Routes() *mux.Router {
 	r.Path("/installable").Methods("POST").HandlerFunc(c.installable)
 	r.Path("/config").Methods("GET").HandlerFunc(c.config)
 	r.Path("/hook").Methods("POST").HandlerFunc(c.hook)
+	r.Path("/sidebar").Methods("GET").HandlerFunc(c.sidebar)
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir(c.static)))
 
@@ -102,14 +104,18 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Parsed auth data failed:%v\n", err)
 	}
 
-	roomIDNumber := int((payLoad["item"].(map[string]interface{}))["room"].(map[string]interface{})["id"].(float64))
-	roomID := strconv.Itoa(roomIDNumber)
+	roomMap := payLoad["item"].(map[string]interface{})["room"].(map[string]interface{})
+	roomName := roomMap["name"].(string)
+	roomID := strconv.Itoa(int(roomMap["id"].(float64)))
 
 	util.PrintDump(w, r, true)
 
 	log.Printf("Sending notification to %s\n", roomID)
+
+	link := fmt.Sprintf("<a href=\"https://hipchat.me/%vtestorumo\">%v</a>", "testorumo", roomName)
+	message := fmt.Sprintf("Let's join <strong>video call</strong>: %v!", link)
 	notifRq := &hipchat.NotificationRequest{
-		Message:       "Let's join <strong>video call</strong>: <a href=\"https://hipchat.me/testorumo\">Testorumo</a>!",
+		Message:       message,
 		MessageFormat: "html",
 		Color:         "green",
 		Notify:        true,
@@ -126,5 +132,13 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Context) sidebar(w http.ResponseWriter, r *http.Request) {
+	sidebarTemplate := path.Join("./static", "sidebar.hbs")
+	tmpl, err := template.ParseFiles(sidebarTemplate)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 
+	vals := map[string]string{}
+
+	tmpl.ExecuteTemplate(w, "sidebar", vals)
 }
