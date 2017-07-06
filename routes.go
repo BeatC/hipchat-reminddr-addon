@@ -35,6 +35,7 @@ func (c *Context) Routes() *mux.Router {
 	r.Path("/config").Methods("GET").HandlerFunc(c.config)
 	r.Path("/hook").Methods("POST").HandlerFunc(c.hook)
 	r.Path("/sidebar").Methods("GET").HandlerFunc(c.sidebar)
+	r.Path("/sidebar/create").Methods("GET").HandlerFunc(c.sidebarCreate)
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir(c.static)))
 
@@ -112,7 +113,7 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Sending notification to %s\n", roomID)
 
-	link := fmt.Sprintf("<a href=\"https://hipchat.me/%vtestorumo\">%v</a>", "testorumo", roomName)
+	link := fmt.Sprintf("<a href=\"https://hipchat.me/%v\">%v</a>", "testorumo", roomName)
 	message := fmt.Sprintf("Let's join <strong>video call</strong>: %v!", link)
 	notifRq := &hipchat.NotificationRequest{
 		Message:       message,
@@ -132,7 +133,18 @@ func (c *Context) hook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Context) sidebar(w http.ResponseWriter, r *http.Request) {
-	sidebarTemplate := path.Join("./static", "sidebar.hbs")
+	// check if room has scheduled standuppas
+	// 1. If it has -> show the list
+	// 2. Placeholder otherwise
+
+	templateName := "sidebar-empty"
+	// standuppas := []string{"OK"}
+
+	// if len(standuppas) > 0 {
+	// 	templateName = "sidebar-list"
+	// }
+
+	sidebarTemplate := path.Join("./static", fmt.Sprintf("%v.hbs", templateName))
 	tmpl, err := template.ParseFiles(sidebarTemplate)
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -140,5 +152,23 @@ func (c *Context) sidebar(w http.ResponseWriter, r *http.Request) {
 
 	vals := map[string]string{}
 
-	tmpl.ExecuteTemplate(w, "sidebar", vals)
+	tmpl.ExecuteTemplate(w, templateName, vals)
+}
+
+func (c *Context) sidebarCreate(w http.ResponseWriter, r *http.Request) {
+	sidebarTemplate := path.Join("./static", "sidebar-create.hbs")
+	tmpl, err := template.ParseFiles(sidebarTemplate)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	vals := map[string]string{
+		"LocalBaseUrl": c.baseURL,
+	}
+
+	tmpl.ExecuteTemplate(w, "sidebar-create", vals)
+}
+
+func (c *Context) sidebarDelete(w http.ResponseWriter, r *http.Request) {
+
 }

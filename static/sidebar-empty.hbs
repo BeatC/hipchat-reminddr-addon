@@ -1,0 +1,45 @@
+{{define "sidebar-empty"}}
+<html>
+    <head>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="//aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui.min.js"></script>
+        <link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all">
+        <style>
+            .container {
+                margin: 10px;
+            }
+
+            .aui-connect-content-inner {
+                text-align: center;
+                margin-top: 50%;
+            }
+
+            .aui-connect-content-inner .aui-buttons {
+                margin-top: 24px;
+            }
+
+            .aui-button a {
+                color: #fff;
+            }
+
+            .aui-button a:hover {
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body class="container">
+    <section class="aui-connect-page aui-connect-page-focused" role="main">
+        <section class="aui-connect-content">
+            <div class="aui-connect-content-inner">
+                    <img src="{{.LocalBaseUrl}}/img/logo.jpg">
+                    <h4>No active standuppas</h1>
+                    <p>You haven't created any standuppa yet.</p>
+                    <div class="aui-buttons">
+                        <button class="aui-button aui-button-primary"><a href="{{.LocalBaseUrl}}/sidebar/create">Create</a></button>
+                </div>
+            </div>
+        </section>
+    </section>
+</body>
+</html>
+{{end}}

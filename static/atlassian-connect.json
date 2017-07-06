@@ -1,6 +1,6 @@
 {{define "config"}}{
     "key": "hc-standuppa-addon",
-    "name": "HipChat Standuppa",
+    "name": "Standuppa",
     "description": "HipChat Standuppa bot. Reminds y'all when to join to the standup",
     "vendor": {
         "name": "TheBeatCoder",
@@ -36,7 +36,7 @@
             {
                 "key": "hc-standuppa-addon-sidebar",
                 "name": {
-                    "value": "Hipchat Standuppa addon sidebar"
+                    "value": "Standuppa addon sidebar"
                 },
                 "location": "hipchat.sidebar.right",
                 "url": "{{.LocalBaseUrl}}/sidebar"
@@ -45,7 +45,7 @@
         "glance": [
             {
                 "name": {
-                    "value": "HipChat Standuppa"
+                    "value": "Standuppa"
                 },
                 "key": "hc-standuppa-addon-glance",
                 "target": "hc-standuppa-addon-sidebar",
